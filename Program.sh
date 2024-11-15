@@ -16,11 +16,11 @@ while getopts "idl" opt; do
             interactive=true
             ;;
         d)
-            echo "Running in debug mode. This will ruin the gaming experience."
+            [[ $interactive == "true" ]] && echo "Running in debug mode. This will ruin the gaming experience."
             debug=true
             ;;
         l)
-            echo "Running in logging mode."
+            [[ $interactive == "true" ]] && echo "Running in logging mode."
             log=true
             ;;
     esac
