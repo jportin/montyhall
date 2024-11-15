@@ -37,6 +37,11 @@ done < "./data.txt"
 # declare -p stats
 # declare -p keys
 
+
+echo "----------------------------------------" >> "$statisticsFile"
+echo "$(date)" >> "$statisticsFile"
+echo "----------------------------------------" >> "$statisticsFile"
+
 for key in "${!keys[@]}"; do
     echo "$key"
 done | sort -n | while IFS=$'\n' read -ra line; do
