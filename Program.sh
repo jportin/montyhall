@@ -26,12 +26,6 @@ while getopts "idl" opt; do
     esac
 done
 
-# I don't love this.
-# Seems like the 2 should be replaced with the number of flags
-# when the numDoors positional argument is required...
-# ChatGPT helped me with this. Specifically, what to do when handling
-# both position and optional arguments, and what to do if the positional
-# argument is missing when it is otherwise required.
 shift $((OPTIND - 1))
 if [[ $interactive == "false" ]]; then
     if [[ -z "$1" ]]; then 
@@ -43,7 +37,7 @@ if [[ $interactive == "false" ]]; then
     fi
 fi
 
-if [[ $interative == "true" ]]; then
+if [[ $interactive == "true" ]]; then
     echo "-----------------------------------------"
     echo "|  Welcome to the Monty Hall simulator  |"
     echo "-----------------------------------------"
@@ -52,9 +46,10 @@ if [[ $interative == "true" ]]; then
     echo "-----------------------------------------"
     echo -e "Three doors will be presented to you. Behind one door is a prize, and behind the other two doors is nothing."
     echo -e "You will begin by guessing which of the doors you think has the prize."
-    echo -e "After youur first guess, the host will reveal one of the doors that has nothing."
+    echo -e "After your first guess, the host will reveal one of the doors that has nothing."
     echo -e "Then, you will be given the option to switch doors."
     echo -e "Finally, it will be revealed if you guessed right and won the prize, or not."
+    echo "-----------------------------------------"
 fi
 
 userDoor=-1
