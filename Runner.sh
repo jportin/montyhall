@@ -5,8 +5,12 @@ source "./Library.sh"
 runExperiment() {
     if [[ -z "$1" ]]; then
         echo "Requires <numDoors> as a position argument."
-        echo "Usage: experimentRunner <numExperiments> <numDoors>"
+        echo "Usage: experimentRunner <numDoors> <numExperiments>"
         exit 1
+    elif [[ "$1" -eq 0 ]]; then
+        numDoors=$((RANDOM % 8 + 3))
+    else
+        numDoors="$1"
     fi
 
     if [[ -z "$2" ]]; then
@@ -15,10 +19,8 @@ runExperiment() {
         exit 1
     fi
 
-
-    numDoors="$1"
     numExperiments="$2"
-
+    
     for ((i=0; i<$numExperiments; i++)); do
         ./Program.sh "-l" "$numDoors"
     done

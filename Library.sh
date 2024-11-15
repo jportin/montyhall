@@ -5,32 +5,42 @@ statisticsFile="statistics.txt"
 # currentDirectory="/mnt/c/Users/johnportin/Revature/Projects/p1-montyhall"
 
 logStatistics() {
-    results="$@"
+    results=("$@")
     for result in "${results[@]}"; do
-        echo $result >> "./$dataFile" 
+        echo "$@" >> "./$dataFile" 
     done
 }
 
-writeStatistics() {
-    args="$@"
-
-    if [[ -z $1 ]]; then
-        echo "Error: requires position argument <numberOfDoors>"
-        echo "Usage: writeStatistics <numberOfDoors> <winPercentage>"
+statistics() {
+    if [[ $# -ne 3 ]]; then
+        echo "Usage: statistics <numberOfDoors> <switchPercentage> <stayPercentage>"
+        echo "Incorrect number of positional arguments"
         exit 1
     fi
 
-    if [[ -z $2 ]]; then
-        echo "Error: requires position argument <winPercentage>"
-        echo "Usage: writeStatistics <numberOfDoors> <winPercentage>"
-        exit 1
+    numDoors=$1
+    switchWins=$2
+    stayWins=$3
+
+    total=$(( switchWins + stayWins ))
+
+    if [[ $switchWins -eq 0 ]]; then
+        switchPercentage="-1"
+    else
+        switchPercentage=$(awk -v switchWins="$switchWins" -v total="$total" 'BEGIN {print switchWins / total}')
     fi
-    echo "$1 $2" >> "./$statisticsFile"
+
+    if [[ $stayWins -eq 0 ]]; then
+        stayPercentage="-1"
+    else
+        stayPercentage=$(awk -v stayWins="$stayWins" -v total="$total" 'BEGIN {print stayWins / total}')
+    fi
+
+    echo "$numDoors" "$switchPercentage" "$stayPercentage" >> ./$statisticsFile
 }
 
 cleanUp() {
-    rm -f "./$dataFile"
-    rm -f "./$statisticsFile"
+    rm -f "./$dataFile" "./$statisticsFile"
 }
 
 

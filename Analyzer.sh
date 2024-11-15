@@ -43,8 +43,11 @@ done | sort -n | while IFS=$'\n' read -ra line; do
     key=$line
     switchWins="${stats[$key-switch]}"
     stayWins="${stats[$key-stay]}"
+    if [[ -z $switchWins ]]; then switchWins=0; fi
+    if [[ -z $stayWins ]]; then stayWins=0; fi
     total=$(( switchWins + stayWins ))
     echo "switch=$switchWins stay=$stayWins total=$total"
-    echo $(awk "BEGIN {print $stayWins / $switchWins}")
-    writeStatistics $line $(awk "BEGIN {print $stayWins / $switchWins}")
+    # echo $(awk -v stayWins="$stayWins" -v switchWins="$switchWins" 'BEGIN {print stayWins / switchWins}')
+    echo "$line" "$switchWins" "$stayWins"
+    statistics $line $switchWins $stayWins
 done
