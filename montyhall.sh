@@ -57,15 +57,13 @@ echo -e "Great selection. Now, what if I tell you that there is nothing behind d
 
 while true; do
     read -r -p "Do you want to switch your selection? (y/n) " toSwitch
-
-    # validate user input
     [[ $toSwitch =~ ^[yn]$ ]] && break || echo "Please enter a valid input from \"y\" and \"n\""
 done
 
 if [[ $toSwitch -eq "y" ]]; then
     switchDoors=()
-    for ((i = 0; i < numDoors; i++)); do
-        [[ $((i + 1)) -ne $firstSelection ]] && switchDoors+=($((i + 1)))
+    for ((i = 1; i <+ numDoors; i++)); do
+        [[ $i -ne $firstSelection ]] && switchDoors+=($i)
     done
 
     declare -p remainingDoors
@@ -73,8 +71,7 @@ if [[ $toSwitch -eq "y" ]]; then
     # Check that the door to switch to is valid
     while true; do
         read -r -p "Select a door: " newDoor
-        newDoorIndex=$(( newDoor - 1 ))
-        [[ $newDoor =~ ^[0-9]+$ && $newDoor -ge 0 && $newDoor -le $numDoors && $newDoor -ne $firstSelection ]] && break || echo "Please make a valid selection."
+        [[ $newDoor =~ ^[0-9]+$ && $newDoor -ge 1 && $newDoor -le $numDoors && $newDoor -ne $firstSelection ]] && break || echo "Please make a valid selection."
     done
 
     userDoor=$newDoor
@@ -82,7 +79,7 @@ else
     echo "Okay, here's your results!"
 fi
 
-if [[ $newDoor -eq $prizeDoorIndex ]]; then
+if [[ $newDoor -eq $prizeDoor ]]; then
     echo "You won!"
 else
     echo "Loser"
