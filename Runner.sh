@@ -20,7 +20,7 @@ runExperiment() {
     fi
 
     numExperiments="$2"
-    
+
     for ((i=0; i<$numExperiments; i++)); do
         ./Program.sh "-l" "$numDoors"
     done
@@ -28,5 +28,3 @@ runExperiment() {
 
 runExperiment $1 $2
 ./Analyzer.sh
-
-# runExperiment 3 1000
