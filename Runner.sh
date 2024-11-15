@@ -1,4 +1,6 @@
-source "/mnt/c/Users/johnportin/Revature/Projects/p1-montyhall/Library.sh"
+#!/usr/bin/bash
+
+source "./Library.sh"
 
 runExperiment() {
     if [[ -z "$1" ]]; then
@@ -18,11 +20,11 @@ runExperiment() {
     numExperiments="$2"
 
     for ((i=0; i<$numExperiments; i++)); do
-        /mnt/c/Users/johnportin/Revature/Projects/p1-montyhall/Program.sh "-l" "$numDoors"
+        ./Program.sh "-l" "$numDoors"
     done
 }
 
 runExperiment $1 $2
-/mnt/c/Users/johnportin/Revature/Projects/p1-montyhall/Analyzer.sh
+./Analyzer.sh
 
 # runExperiment 3 1000

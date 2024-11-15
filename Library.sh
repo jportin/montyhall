@@ -1,11 +1,13 @@
+#!/usr/bin/bash
+
 dataFile="data.txt"
 statisticsFile="statistics.txt"
-currentDirectory="/mnt/c/Users/johnportin/Revature/Projects/p1-montyhall"
+# currentDirectory="/mnt/c/Users/johnportin/Revature/Projects/p1-montyhall"
 
 logStatistics() {
     results="$@"
     for result in "${results[@]}"; do
-        echo $result >> "$currentDirectory/$dataFile" 
+        echo $result >> "./$dataFile" 
     done
 }
 
@@ -23,12 +25,12 @@ writeStatistics() {
         echo "Usage: writeStatistics <numberOfDoors> <winPercentage>"
         exit 1
     fi
-    echo "$1 $2" >> "$currentDirectory/$statisticsFile"
+    echo "$1 $2" >> "./$statisticsFile"
 }
 
 cleanUp() {
-    rm -f "$currentDirectory/$dataFile"
-    rm -f "$currentDirectory/$statisticsFile"
+    rm -f "./$dataFile"
+    rm -f "./$statisticsFile"
 }
 
 

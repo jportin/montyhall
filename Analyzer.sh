@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Read in from data.txt
 # We want to know what probability of winning is if you switch doors. 
 source ./Library.sh
