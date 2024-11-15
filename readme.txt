@@ -1,3 +1,5 @@
+Link: https://github.com/jportin/montyhall
+
 There are several ways to interact with these scripts. 
 
     1. If you just want to play the game, go ahead and execute
@@ -14,12 +16,13 @@ There are several ways to interact with these scripts.
 
     4. If you want to collect a large amount of data, the functions inside the Runner script may prove useful.
     To run n experiments with d doors, use the command
-        `bash ./Runner.sh n d`
+        `bash ./Runner.sh d n`
     This will start n experiments with d doors from the program with the `-l` flag to save the data.
     Additionally, if you are interested in experimental data for a random number of doors (3-10), you 
     set d=0 in the command line argument. 
 
     5. If you want to analyze this data and determine the win percentages for switching or not switching, run
         `bash ./Analyzer.sh`
+
 
 
