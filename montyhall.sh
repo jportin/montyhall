@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+source ./Library.sh
+
 echo "-----------------------------------------"
 echo "|  Welcome to the Monty Hall simulator  |"
 echo "-----------------------------------------"
@@ -13,11 +15,12 @@ echo -e "Then, you will be given the option to switch doors."
 echo -e "Finally, it will be revealed if you guessed right and won the prize, or not."
 
 # This should probably just be logged, not output to std out. 
+# getopts documentation https://man7.org/linux/man-pages/man1/getopts.1p.html
 interactive=false
 debug=false
 log=false
 numDoors=-1
-while getopts "idl:" opt; do
+while getopts "idl" opt; do
     case $opt in
         i)
             echo "Running in interactive mode."
@@ -30,14 +33,20 @@ while getopts "idl:" opt; do
         l)
             echo "Running in logging mode."
             log=true
+            ;;
     esac
 done
 
+# I don't love this.
+# Seems like the 2 should be replaced with the number of flags
+# when the numDoors positional argument is required...
+# ChatGPT helped me with this. Specifically, what to do when handling
+# both position and optional arguments, and what to do if the positional
+# argument is missing when it is otherwise required.
 shift $((OPTIND - 1))
 if [[ $interactive == "false" ]]; then
     if [[ -z "$1" ]]; then 
-        echo "ERROR: <numdoors> is a required position argument"
-        echo "Usage: $0 [-i] [-d] <numDoors>"
+        echo "Requires one position argument"
         exit 1
     else
         numDoors="$1"
@@ -62,12 +71,6 @@ done
 prizeDoorIndex=$(( RANDOM % numDoors))
 prizeDoor=$(( prizeDoorIndex + 1 ))
 $debug && echo -e "The winning door is..... $prizeDoor!!!!!"
-# Do we ever really use this?
-# doors=()
-# for (( i=0; i<numDoors; i++)); do
-#     [[ $i == $prizeDoorIndex ]] && doors+=(1) || doors+=(0)
-# done
-# $debug && declare -p doors
 
 if [[ $interactive == "true" ]]; then
     echo -e "Very well, playing with $numDoors doors."
@@ -161,3 +164,6 @@ fi
 # Number of doors - numDoors
 # Whether the participant switched - toSwitch from "y", "n"
 # Whether the participant won - userWin from "true" and "false"
+
+# For each run, if the -l flag is given, log the results of the run to a file. 
+[[ $log == "true" ]] && logStatistics $numDoors $toSwitch $userWin
