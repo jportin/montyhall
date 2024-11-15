@@ -1,6 +1,6 @@
 dataFile="data.txt"
 statisticsFile="statistics.txt"
-currentDirectory=$(pwd)
+currentDirectory="/mnt/c/Users/johnportin/Revature/Projects/p1-montyhall"
 
 logStatistics() {
     results="$@"
