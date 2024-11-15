@@ -1,6 +1,8 @@
-echo "Welcome to the Monty Hall simulator"
+echo "-----------------------------------------"
+echo "|  Welcome to the Monty Hall simulator  |"
+echo "-----------------------------------------"
 
-echo -e "The Monty Hall problem simulator  presents a famous problem in bayesian statistics developed by Monty Hall. The participant is shown three doors, and told that there is a prize behind exactly one door. After selecting one door, the host reveals the contents of one door which contains nothing. The participant is then given the option to switch their guess, or keep it the same. The results of switching your answer were surprising to even the brightest mathematicians at the time. Here, we will discover them for ourselves."
+echo -e "This simulator presents a famous problem in bayesian statistics developed by Monty Hall. The participant is shown three doors, and told that there is a prize behind exactly one door. After the participant selects one door, the host reveals the contents of one door which contains nothing. The participant is then given the option to switch their guess, or keep it the same. The results of switching your answer were surprising to even the brightest mathematicians at the time. Here, we will discover them for ourselves."
 
 userDoor=-1
 
@@ -18,6 +20,7 @@ done
 # Pick the winning door index, and create an array of doors
 prizeDoorIndex=$(( RANDOM % numDoors))
 prizeDoor=$(( prizeDoorIndex + 1 ))
+echo -e "The winning door is..... $prizeDoor!!!!!"
 # Do we ever really use this?
 doors=()
 for (( i=0; i<numDoors; i++)); do
@@ -31,12 +34,10 @@ echo -n "Go ahead and pick a door from "
 
 while true; do 
     # Display the doors to select from
-    for ((i = 0; i < numDoors; i++)); do
-        echo -n "$i"
-        [[ $i -ne $(( numDoors - 1 )) ]] && echo -n " " || echo -n ": "
+    for ((i = 1; i <= numDoors; i++)); do
+        echo -n $i
+        [[ $i -ne $numDoors ]] && echo -n " " || echo -n ": "
     done
-
-    # Collect the users input
     read -r firstSelection
     [[ $firstSelection =~ ^[0-9]+$ && $firstSelection -ge 1 && $firstSelection -le $numDoors ]] && { userDoor=$firstSelection; break; } || echo "Please make a valid selection."
 done
@@ -50,9 +51,10 @@ for ((i = 1; i <= numDoors; i++)); do
 done
 declare -p remainingDoors
 
-# Pick a random index to determine the remaining door
+# Pick a random index to determine the empty door to reveal
 doorToRevealIndex=$(( RANDOM % "${#remainingDoors[@]}" ))
 doorToReveal="${remainingDoors[$doorToRevealIndex]}"
+
 echo -e "Great selection. Now, what if I tell you that there is nothing behind door: $doorToReveal"
 
 while true; do
@@ -60,18 +62,21 @@ while true; do
     [[ $toSwitch =~ ^[yn]$ ]] && break || echo "Please enter a valid input from \"y\" and \"n\""
 done
 
-if [[ $toSwitch -eq "y" ]]; then
+if [[ $toSwitch == "y" ]]; then
+    echo -n "Switching doors. Select from: "
     switchDoors=()
-    for ((i = 1; i <+ numDoors; i++)); do
-        [[ $i -ne $firstSelection ]] && switchDoors+=($i)
+    for ((i = 1; i <= numDoors; i++)); do
+        [[ $i -ne $firstSelection && $i -ne $doorToReveal ]] && switchDoors+=($i)
     done
 
-    declare -p remainingDoors
+    for i in "${switchDoors[@]}"; do
+        echo -n "$i "
+    done
 
     # Check that the door to switch to is valid
     while true; do
         read -r -p "Select a door: " newDoor
-        [[ $newDoor =~ ^[0-9]+$ && $newDoor -ge 1 && $newDoor -le $numDoors && $newDoor -ne $firstSelection ]] && break || echo "Please make a valid selection."
+        [[ $newDoor =~ ^[0-9]+$ && $newDoor -ge 1 && $newDoor -le $numDoors && $newDoor -ne $firstSelection && $newDoor -ne $doorToReveal ]] && break || echo "Please make a valid selection."
     done
 
     userDoor=$newDoor
@@ -79,11 +84,8 @@ else
     echo "Okay, here's your results!"
 fi
 
-if [[ $newDoor -eq $prizeDoor ]]; then
+if [[ $userDoor -eq $prizeDoor ]]; then
     echo "You won!"
 else
     echo "Loser"
 fi
-
-
-
