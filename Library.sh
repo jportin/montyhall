@@ -4,6 +4,10 @@ logStatistics() {
 
     results="$@"
     for result in "${results[@]}"; do
-        each $result >> "$file" 
+        echo $result >> "$file" 
     done
+}
+
+cleanUp() {
+    rm -f "data.txt"
 }

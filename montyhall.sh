@@ -2,17 +2,6 @@
 
 source ./Library.sh
 
-echo "-----------------------------------------"
-echo "|  Welcome to the Monty Hall simulator  |"
-echo "-----------------------------------------"
-
-echo -e "This simulator presents a famous problem in bayesian statistics developed by Monty Hall."
-echo "-----------------------------------------"
-echo -e "Three doors will be presented to you. Behind one door is a prize, and behind the other two doors is nothing."
-echo -e "You will begin by guessing which of the doors you think has the prize."
-echo -e "After youur first guess, the host will reveal one of the doors that has nothing."
-echo -e "Then, you will be given the option to switch doors."
-echo -e "Finally, it will be revealed if you guessed right and won the prize, or not."
 
 # This should probably just be logged, not output to std out. 
 # getopts documentation https://man7.org/linux/man-pages/man1/getopts.1p.html
@@ -54,6 +43,20 @@ if [[ $interactive == "false" ]]; then
     fi
 fi
 
+if [[ $interative == "true" ]]; then
+    echo "-----------------------------------------"
+    echo "|  Welcome to the Monty Hall simulator  |"
+    echo "-----------------------------------------"
+
+    echo -e "This simulator presents a famous problem in bayesian statistics developed by Monty Hall."
+    echo "-----------------------------------------"
+    echo -e "Three doors will be presented to you. Behind one door is a prize, and behind the other two doors is nothing."
+    echo -e "You will begin by guessing which of the doors you think has the prize."
+    echo -e "After youur first guess, the host will reveal one of the doors that has nothing."
+    echo -e "Then, you will be given the option to switch doors."
+    echo -e "Finally, it will be revealed if you guessed right and won the prize, or not."
+fi
+
 userDoor=-1
 
 # Problem setup
@@ -80,11 +83,11 @@ fi
 
 while true; do 
     # Display the doors to select from
-    for ((i = 1; i <= numDoors; i++)); do
-        echo -n $i
-        [[ $i -ne $numDoors ]] && echo -n " " || echo -n ": "
-    done
     if [[ $interactive == "true" ]]; then
+        for ((i = 1; i <= numDoors; i++)); do
+            echo -n $i
+            [[ $i -ne $numDoors ]] && echo -n " " || echo -n ": "
+        done
         read -r firstSelection
     else 
         firstSelection=$(( RANDOM % numDoors + 1))
@@ -154,10 +157,12 @@ fi
 
 [[ $userDoor -eq $prizeDoor ]] && userWin=true || userWin=false
 
-if [[ $userWin == "true" ]]; then
-    echo "You won!"
-else
-    echo "Loser"
+if [[ $interactive == "true" ]]; then
+    if [[ $userWin == "true" ]]; then
+        echo "You won!"
+    else
+        echo "Loser"
+    fi
 fi
 
 # The important statistics to collect are:
