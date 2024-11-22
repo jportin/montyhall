@@ -9,10 +9,12 @@ interactive=false
 debug=false
 log=false
 numDoors=-1
+source ./ComputerPlayer.sh
 while getopts "idl" opt; do
     case $opt in
         i)
             echo "Running in interactive mode."
+            source ./Player.sh
             interactive=true
             ;;
         d)
@@ -59,7 +61,9 @@ userDoor=-1
 # Must be at least 3
 while true; do
     # Prompt user
-    [[ $interactive == "true" ]] && read -r -p "How many doors should we play with: " numDoors    
+
+    [[ $interactive == "true" ]] && echo "How many doors should we play with: "
+    numDoors=$(getNumberOfDoors)
     # expecting a number back
     # Check if result is a digit and if that digit is at least 3
     [[ $numDoors =~ ^[0-9]+$ && $numDoors -ge 3 ]] && break || echo -e "NumDoors must be a digit greater than or equal to 3. Try again."
@@ -83,12 +87,13 @@ while true; do
             echo -n $i
             [[ $i -ne $numDoors ]] && echo -n " " || echo -n ": "
         done
-        read -r firstSelection
-    else 
-        firstSelection=$(( RANDOM % numDoors + 1))
     fi
-        [[ $debug == "true" ]] && echo -e "CONFIRMING: first selection = $firstSelection"
-        [[ $firstSelection =~ ^[0-9]+$ && $firstSelection -ge 1 && $firstSelection -le $numDoors ]] && { userDoor=$firstSelection; break; } || echo "Please make a valid selection."
+
+    # Get the first door selected
+    firstSelection=$(getFirstDoorSelection numDoors)
+
+    [[ $debug == "true" ]] && echo -e "CONFIRMING: first selection = $firstSelection"
+    [[ $firstSelection =~ ^[0-9]+$ && $firstSelection -ge 1 && $firstSelection -le $numDoors ]] && { userDoor=$firstSelection; break; } || echo "Please make a valid selection."
 done
 
 
@@ -108,12 +113,9 @@ doorToReveal="${remainingDoors[$doorToRevealIndex]}"
 
 while true; do
     if [[ $interactive == true ]]; then
-        read -r -p "Do you want to switch your selection? (y/n) " toSwitch
-    else
-        options=("y" "n")
-        toSwitchIndex=$(( RANDOM % 2))
-        toSwitch="${options[$toSwitchIndex]}"
+        echo "Do you want to switch your selection? (y/n) "
     fi
+    toSwitch=$(switchDoor)
     [[ $debug == "true" ]] && echo -e "CONFIRMING: toSwitch = $toSwitch"
     [[ $toSwitch =~ ^[yn]$ ]] && break || echo "Please enter a valid input from \"y\" and \"n\""
 done
@@ -135,12 +137,11 @@ if [[ $toSwitch == "y" ]]; then
 
     # Check that the door to switch to is valid
     while true; do
-    if [[ $interactive == "true" ]]; then
-            read -r -p "Select a door: " newDoor
-        else
-            newDoorIndex=$(( RANDOM % ${#switchDoors[@]} ))
-            newDoor="${switchDoors[$newDoorIndex]}"
+        if [[ $interactive == "true" ]]; then
+                echo "Select a door: "
         fi
+        newDoor=$(getNewDoor "${switchDoors[@]}")
+        
         [[ $debug == "true" ]] && echo -e "CONFIRM: Switching door to $newDoor."
         [[ $newDoor =~ ^[0-9]+$ && $newDoor -ge 1 && $newDoor -le $numDoors && $newDoor -ne $firstSelection && $newDoor -ne $doorToReveal ]] && break || echo "Please make a valid selection."
     done
